@@ -25,6 +25,9 @@ exports.wallet = (req, res) => {
         console.log(result);
         var loggedInCrypto = result[0].crypto;
         if (loggedInCrypto == adresse) {
+            res.render("wallet",{
+                message0 : "Fehler, es ist ihre Adresse!!!"
+            });
             console.log("Fehler es ist ihre Adresse!!!");
         } else {
             db.query("SELECT kontostand FROM user WHERE email = ?", [email] , function (err, result) {
@@ -35,6 +38,9 @@ exports.wallet = (req, res) => {
                 console.log(max_send_money);
 
                 if (amount > max_send_money) {
+                    res.render("wallet",{
+                        message1: "Sie haben zu wenige Coins!!!"
+                    })
                     console.log("Sie haben zu wenige Coins!!!");
                 } else {
                     db.query("SELECT kontostand FROM user WHERE crypto = ?", [adresse], function (err, result) {
@@ -50,6 +56,9 @@ exports.wallet = (req, res) => {
                         db.query('UPDATE user SET ? WHERE crypto = ?', [{ kontostand: neuerKontostand }, adresse]);
                         db.query('UPDATE user SET ? WHERE email = ?', [{ kontostand: neuerKontostandSender }, email]);
                         db.query('INSERT INTO transaction SET ?', { sender: loggedInCrypto, receiver: adresse, amount: amount, date: datum , info : "Transaction" });
+                        res.render("wallet",{
+                            message2 : "Transaktion erfolgreich!!!"
+                        })
 
                     })
                     
@@ -66,6 +75,9 @@ exports.showCrypto = (req, res) => {
             console.log(err);
         }
         console.log(result);
+        return res.render("wallet", {
+            crypto: "Deine Crypto-Adresse lautet: " + result[0].crypto 
+        });
     })
 
 }
@@ -93,16 +105,26 @@ exports.mining = (req, res) => {
           
 
             if (amountMining > max_send_money) {
+                res.render("wallet",{
+                    message3: "Sie haben zu wenige Coins!!!"
+                })
                 console.log("Sie haben zu wenige Coins!!!");
             } else {
                 db.query('UPDATE user SET ? WHERE email = ?', [{ mining: neuMining }, email]);
                 db.query('UPDATE user SET ? WHERE email = ?', [{ kontostand: neuerKontostandUser }, email]);
+
+                res.render("wallet",{
+                    message4 : "Mining erfolgreich durchgeführt!!!"
+                })
 
                 var count = neuMining;
                 let max = 1.2575* neuMining;
                 function counter() {
                     if (count <= max) {
                     count = count + 0.1;
+                    //res.render("wallet",{
+                      //  minen: "Ihre Mining-Funktion: " //Ausbauen ohne error in wallet anzeigen, minen2 : count
+                    //});
                     console.log(count);
                     db.query("UPDATE user SET ? WHERE email = ?", [{mining : count}, email]);
                     }
@@ -124,7 +146,8 @@ exports.mining = (req, res) => {
         })
 
 
-    })
+    }) 
+    
 }
 exports.auszahlen = (req, res) => {
     var amountAuszahlen = req.body.auszahlen;
@@ -151,6 +174,10 @@ exports.auszahlen = (req, res) => {
                 db.query("UPDATE user SET ? WHERE email = ?", [{mining : neuesMining}, email]);
                 db.query("UPDATE user SET ? WHERE email = ?", [{Kontostand : neuerKontostand}, email]);
 
+                res.render("wallet",{
+                    message5: "Auszahlung erfolgreich!!"
+                })
+
                 db.query("SELECT crypto FROM user WHERE email = ?", [email] , function (err,result) {
                     if(err){
                         console.log(err);
@@ -162,6 +189,9 @@ exports.auszahlen = (req, res) => {
             })
         }
         else{
+            res.render("wallet",{
+                message6: "Sie haben nicht so viel gemint!!"
+            })
             console.log("Sie haben nicht so viel gemint!!");
         }
       
