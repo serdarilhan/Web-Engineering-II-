@@ -24,10 +24,10 @@ exports.wallet = (req, res) => {
         }
         console.log(result);
         var loggedInCrypto = result[0].crypto;
-        if (result[0].crypto == adresse) {
+        if (loggedInCrypto == adresse) {
             console.log("Fehler es ist ihre Adresse!!!");
         } else {
-            db.query("SELECT kontostand FROM user WHERE email = ?", [email], function (err, result) {
+            db.query("SELECT kontostand FROM user WHERE email = ?", [email] , function (err, result) {
                 if (err) {
                     console.log(err);
                 }
@@ -37,7 +37,7 @@ exports.wallet = (req, res) => {
                 if (amount > max_send_money) {
                     console.log("Sie haben zu wenige Coins!!!");
                 } else {
-                    db.query("SELECT kontostand FROM user WHERE crypto = ?", adresse, function (err, result) {
+                    db.query("SELECT kontostand FROM user WHERE crypto = ?", [adresse], function (err, result) {
                         if (err) {
                             console.log(err);
                         }
@@ -52,10 +52,21 @@ exports.wallet = (req, res) => {
                         db.query('INSERT INTO transaction SET ?', { sender: loggedInCrypto, receiver: adresse, amount: amount, date: datum , info : "Transaction" });
 
                     })
-                }
+                    
+                } 
             })
         }
     });
+
+}
+exports.showCrypto = (req, res) => {
+    var email = show.email;
+    db.query("SELECT crypto FROM user WHERE email = ? ", [email], function (err, result) {
+        if (err) {
+            console.log(err);
+        }
+        console.log(result);
+    })
 
 }
 
@@ -109,7 +120,7 @@ exports.mining = (req, res) => {
     
                 
                 
-            }
+            } 
         })
 
 

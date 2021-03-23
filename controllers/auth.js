@@ -106,10 +106,8 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
-
+    res.clearCookie('jwt');
     res.status(200).redirect("../login");
-    
-
 }
 
 

@@ -40,6 +40,7 @@ db.connect((error)=>{
 app.use("/",require("./routes/pages"));
 app.use("/auth", require("./routes/auth"));
 app.use("/walletBackend" ,require("./routes/walletBackend"));
+app.use("/accDelete" , require("./routes/accDelete"));
 
 app.listen(8080,() => {
     console.log("Server is on fleek")

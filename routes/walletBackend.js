@@ -9,5 +9,7 @@ router.post("/mining", walletController.mining);
 
 router.post("/auszahlen", walletController.auszahlen);
 
+router.post("/showCrypto", walletController.showCrypto);
+
 
 module.exports = router;
