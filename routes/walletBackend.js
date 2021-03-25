@@ -11,5 +11,9 @@ router.post("/auszahlen", walletController.auszahlen);
 
 router.post("/showCrypto", walletController.showCrypto);
 
+router.post("/showKontostand", walletController.showKontostand);
+router.post("/showMining", walletController.showMining);
+router.post("/showHistorie", walletController.showHistorie);
+
 
 module.exports = router;

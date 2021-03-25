@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
+   
     <title>Wallet</title>
 </head>
 <body>
@@ -47,9 +48,19 @@
 
 <form class="form-signin" action="/accDelete/accDelete" method="POST">
 <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Account Löschen</button>
-
-
 </form>
+<form class="form-signin" action="/walletBackend/showKontostand" method="POST">
+<button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Zeigen kontostand</button>
+</form>
+
+<form class="form-signin" action="/walletBackend/showMining" method="POST">
+<button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Zeigen Mining-stand</button>
+</form>
+<form class="form-signin" action="/walletBackend/showHistorie" method="POST">
+<button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Historie</button>
+</form>
+
+
 <p>{{crypto}}</p>
 <p>{{message0}}</p>
 <p>{{message1}}</p>
@@ -59,8 +70,12 @@
 <p>{{message5}}</p>
 <p>{{message6}}</p>
 <p>{{message7}}</p>
-
-
+<p>{{kontostand}}</p>
+<p>{{mining}}</p>
+<p>{{menegHistorie}}</p>
+<p>{{infoHistorie}}</p>
+<p>{{info}}</p>
+<p>{{hallo}}</p>
 
 </body>
 </html>

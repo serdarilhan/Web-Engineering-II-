@@ -3,7 +3,7 @@ const path = require("path");
 const mysql = require("mysql");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-
+//const handlebars = require('express-handlebars');
 
 dotenv.config({ path : './.env'});
 
@@ -26,6 +26,11 @@ app.use (express.json());
 app.use(cookieParser());
 
 app.set("view engine" , "hbs");
+//app.engine('handlebars', handlebars({
+  //  layoutsDir: __dirname + '/views',
+    //extname: "hbs"
+   // }));
+
 
 db.connect((error)=>{
     if(error){
@@ -41,6 +46,7 @@ app.use("/",require("./routes/pages"));
 app.use("/auth", require("./routes/auth"));
 app.use("/walletBackend" ,require("./routes/walletBackend"));
 app.use("/accDelete" , require("./routes/accDelete"));
+
 
 app.listen(8080,() => {
     console.log("Server is on fleek")
