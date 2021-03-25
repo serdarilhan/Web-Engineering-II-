@@ -26,7 +26,7 @@ exports.wallet = (req, res) => {
         var loggedInCrypto = result[0].crypto;
         if (loggedInCrypto == adresse) {
             res.render("wallet", {
-                message0: "Fehler, es ist ihre Adresse!!!"
+                message1: "Fehler, es ist ihre Adresse!!!"
             });
             console.log("Fehler es ist ihre Adresse!!!");
         }
@@ -36,7 +36,7 @@ exports.wallet = (req, res) => {
             }
             else if (result[0] !== adresse) {
                 console.log("Keine gültige Adresse");
-                res.render("wallet", { message7: "Keine gültige Adresse" });
+                res.render("wallet", { message2: "Keine gültige Adresse" });
             }
             else {
                 db.query("SELECT kontostand FROM user WHERE email = ?", [email], function (err, result) {
@@ -48,7 +48,7 @@ exports.wallet = (req, res) => {
 
                     if (amount > max_send_money) {
                         res.render("wallet", {
-                            message1: "Sie haben zu wenige Coins!!!"
+                            message3: "Sie haben zu wenige Coins!!!"
                         })
                         console.log("Sie haben zu wenige Coins!!!");
                     } else {
@@ -66,34 +66,19 @@ exports.wallet = (req, res) => {
                             db.query('UPDATE user SET ? WHERE email = ?', [{ kontostand: neuerKontostandSender }, email]);
                             db.query('INSERT INTO transaction SET ?', { sender: loggedInCrypto, receiver: adresse, amount: amount, date: datum, info: "Transaction" });
                             res.render("wallet", {
-                                message2: "Transaktion erfolgreich!!!"
+                                message4: "Transaktion erfolgreich!!!"
                             })
 
                         })
 
                     }
                 })
+                res.status(200).redirect("../wallet");
             }
         })
     });
 
 }
-
-
-exports.showCrypto = (req, res) => {
-    var email = show.email;
-    db.query("SELECT crypto FROM user WHERE email = ? ", [email], function (err, result) {
-        if (err) {
-            console.log(err);
-        }
-        console.log(result);
-        return res.render("wallet", {
-            crypto: "Deine Crypto-Adresse lautet: " + result[0].crypto
-        });
-    })
-
-}
-
 
 exports.mining = (req, res) => {
     var amountMining1 = req.body.mining;
@@ -118,7 +103,7 @@ exports.mining = (req, res) => {
 
             if (amountMining > max_send_money) {
                 res.render("wallet", {
-                    message3: "Sie haben zu wenige Coins!!!"
+                    message5: "Sie haben zu wenige Coins!!!"
                 })
                 console.log("Sie haben zu wenige Coins!!!");
             } else {
@@ -126,7 +111,7 @@ exports.mining = (req, res) => {
                 db.query('UPDATE user SET ? WHERE email = ?', [{ kontostand: neuerKontostandUser }, email]);
 
                 res.render("wallet", {
-                    message4: "Mining erfolgreich durchgeführt!!!"
+                    message6: "Mining erfolgreich durchgeführt!!!"
                 })
 
                 var count = neuMining;
@@ -152,7 +137,7 @@ exports.mining = (req, res) => {
                     db.query('INSERT INTO transaction SET ?', { sender: mining_crypto, receiver: mining_crypto, amount: amountMining, date: datum, info: "Mining" });
                 });
 
-
+                res.status(200).redirect("../wallet");
 
             }
         })
@@ -187,7 +172,7 @@ exports.auszahlen = (req, res) => {
                 db.query("UPDATE user SET ? WHERE email = ?", [{ Kontostand: neuerKontostand }, email]);
 
                 res.render("wallet", {
-                    message5: "Auszahlung erfolgreich!!"
+                    message7: "Auszahlung erfolgreich!!"
                 })
 
                 db.query("SELECT crypto FROM user WHERE email = ?", [email], function (err, result) {
@@ -199,66 +184,18 @@ exports.auszahlen = (req, res) => {
                     db.query('INSERT INTO transaction SET ?', { sender: auszahlen_crypto, receiver: auszahlen_crypto, amount: amountMining, date: datum, info: "Auszahlen" });
                 });
             })
+            res.status(200).redirect("../wallet");
         }
         else {
             res.render("wallet", {
-                message6: "Sie haben nicht so viel gemint!!"
+                message8: "Sie haben nicht so viel gemint!!"
             })
             console.log("Sie haben nicht so viel gemint!!");
         }
 
-    })
-
-}
-
-exports.showKontostand = (req, res) => {
-    db.query("SELECT kontostand FROM user WHERE email = ?", [show.email], function (err, result) {
-        if (err) {
-            console.log(err);
-        }
-        var kontostand = result[0].kontostand;
-        res.render("wallet", {
-            kontostand: kontostand
-        });
-    });
-}
-
-exports.showMining = (req, res) => {
-    db.query("SELECT mining FROM user WHERE email = ?", [show.email], function (err, result) {
-        if (err) {
-            console.log(err);
-        }
-        var mining = result[0].mining;
-        res.render("wallet", {
-            mining: mining
-        });
-    });
-}
-
-exports.showHistorie = (req, res) => {
-    db.query("SELECT crypto FROM user WHERE email = ?", [show.email], function (err, reuslt) {
-        if (err) {
-            console.log(err);
-        }
-        var sender = reuslt[0].crypto;
-        db.query("SELECT amount,date,info FROM transaction WHERE sender = ?", [sender], function (err, result) {
-            if (err) {
-                console.log(err);
-            }
-            console.log(result);
-            var amounthistorie = result[3].amount;
-           // var date = result[4].date;
-            var infoHistorie = result[5].info;
-            res.render("wallet", {
-                //menegHistorie: "Betrag: " + amounthistorie, infoHistorie: "Art: " + infoHistorie, info: "Datum : " + date
-                hallo : "Und: " + JSON.stringify(result)
-            });
-
-
-        })
-
 
     })
-}
+    
 
+}
 
