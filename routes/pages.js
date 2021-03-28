@@ -40,12 +40,20 @@ router.get("/wallet", (req, res) => {
                     console.log(err);
                 }
                 var sender = reuslt[0].crypto;
-                db.query("SELECT amount,date,info FROM transaction WHERE sender = ?", [sender], function (err, result) {
+                db.query("SELECT amount,date,info FROM transaction WHERE sender = ?", [sender], function (err, results) {
                     if (err) {
                         console.log(err);
                     }
 
-                    var historie = JSON.stringify(result);
+                    let ergebnis = [];
+                    for (var i in results) {
+
+                        ergebnis.push(results[i].amount + " " + results[i].date + " " + results[i].info + " ");
+                        
+
+                    }
+                   
+
                     db.query("SELECT crypto FROM user WHERE email = ? ", [show.email], function (err, result) {
                         if (err) {
                             console.log(err);
@@ -53,7 +61,7 @@ router.get("/wallet", (req, res) => {
                         console.log(result);
                         var crypto = result[0].crypto;
                         res.render("wallet", {
-                            mining: "Mining-stand: " + mining, kontostand: "Kontostand: " + kontostand, History: "Zahlungshistorie" + historie, crypto: "Deine Crypto-Adresse lautet: " + crypto
+                            mining: "Mining-stand: " + mining, kontostand: "Kontostand: " + kontostand, History: "Zahlungshistorie: " + ergebnis, crypto: "Deine Crypto-Adresse lautet: " + crypto
                         });
 
                     })
