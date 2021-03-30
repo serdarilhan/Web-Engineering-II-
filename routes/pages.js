@@ -60,11 +60,29 @@ router.get("/wallet", (req, res) => {
                         }
                         console.log(result);
                         var crypto = result[0].crypto;
-                        res.render("wallet", {
-                            mining: "Mining-stand: " + mining, kontostand: "Kontostand: " + kontostand, History: "Zahlungshistorie: " + ergebnis, crypto: "Deine Crypto-Adresse lautet: " + crypto
-                        });
+
+                        db.query("SELECT name FROM user WHERE email = ? ", [show.email], function (err, result) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            console.log(result);
+                            var name = result[0].name;
+
+                            function response() {
+                                res.render("wallet", {
+                                    mining: mining, kontostand: kontostand, History: ergebnis, crypto: crypto, name: name
+                                });
+                            }
+                            response();
+                        })
+
+                        
+      
 
                     })
+
+                    
+
 
                 })
 

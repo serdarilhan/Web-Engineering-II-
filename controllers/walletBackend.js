@@ -30,15 +30,16 @@ exports.wallet = (req, res) => {
             });
             console.log("Fehler es ist ihre Adresse!!!");
         }
+        console.log(adresse);
         db.query("SELECT crypto FROM user WHERE crypto = ?", [adresse], function (err, result) {
             if (err) {
                 console.log(err);
             }
-            else if (result[0] !== adresse) {
+            if (result[0].crypto !== adresse) {
                 console.log("Keine gültige Adresse");
+                console.log(result);
                 res.render("wallet", { message2: "Keine gültige Adresse" });
-            }
-            else {
+            } else {
                 db.query("SELECT kontostand FROM user WHERE email = ?", [email], function (err, result) {
                     if (err) {
                         console.log(err);
@@ -73,7 +74,7 @@ exports.wallet = (req, res) => {
 
                     }
                 })
-                res.status(200).redirect("../wallet");
+                res.status(200).redirect("/wallet");
             }
         })
     });
@@ -126,7 +127,6 @@ exports.mining = (req, res) => {
                         db.query("UPDATE user SET ? WHERE email = ?", [{ mining: count }, email]);
                     }
                 }
-                setInterval(counter, 10000);
 
                 db.query("SELECT crypto FROM user WHERE email = ?", [email], function (err, result) {
                     if (err) {
@@ -137,7 +137,7 @@ exports.mining = (req, res) => {
                     db.query('INSERT INTO transaction SET ?', { sender: mining_crypto, receiver: mining_crypto, amount: amountMining, date: datum, info: "Mining" });
                 });
 
-                res.status(200).redirect("../wallet");
+                res.status(200).redirect("/wallet");
 
             }
         })

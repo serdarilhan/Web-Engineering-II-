@@ -30,32 +30,34 @@ exports.index = (req, res) => {
             return res.render("index", {
                 message: "Passwort stimmt nicht überein!"
             })
+        } else {
+            var kontostand = 100;
+            var mining = 0;
+            let hashedPasswort = await bcrypt.hash(passwort, 8);
+            console.log(hashedPasswort);
+            const current_date = (new Date()).valueOf().toString();
+            const random = Math.random().toString();
+            const cryptoHashed = crypto.createHash('sha256').update(current_date + random).digest('hex');
+            console.log(cryptoHashed);
+    
+            db.query("INSERT INTO user SET ? ", { name: name, email: email, passwort: hashedPasswort, crypto: cryptoHashed, kontostand: kontostand, mining : mining }, (error, results) => {
+                if (error) {
+                    console.log(error);
+                }
+                else {
+                    console.log(results);
+                    return res.render("index", {
+                        message: "User ist regestriert"
+    
+                    })
+    
+                }
+    
+            })
+    
+         res.status(200).redirect("../login");
         }
-        var kontostand = 100;
-        var mining = 0;
-        let hashedPasswort = await bcrypt.hash(passwort, 8);
-        console.log(hashedPasswort);
-        const current_date = (new Date()).valueOf().toString();
-        const random = Math.random().toString();
-        const cryptoHashed = crypto.createHash('sha256').update(current_date + random).digest('hex');
-        console.log(cryptoHashed);
-
-        db.query("INSERT INTO user SET ? ", { name: name, email: email, passwort: hashedPasswort, crypto: cryptoHashed, kontostand: kontostand, mining : mining }, (error, results) => {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                console.log(results);
-                return res.render("index", {
-                    message: "User ist regestriert"
-
-                })
-
-            }
-
-        })
-
-    }); res.status(200).redirect("../login");
+    });
 
 
 }
