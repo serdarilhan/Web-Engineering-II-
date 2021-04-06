@@ -3,11 +3,14 @@ const path = require("path");
 const mysql = require("mysql");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-//const handlebars = require('express-handlebars');
-
-dotenv.config({ path : './.env'});
-
 const app = express();
+var http = require("http").createServer(app);
+var io = require("socket.io")(http);
+dotenv.config({ path : './.env'});
+var bodyParser = require("body-parser");
+const show = require("./controllers/auth");
+
+
 
 
 const db = mysql.createConnection({
@@ -15,6 +18,41 @@ const db = mysql.createConnection({
     user: process.env.DATABASE_USER,
     password : process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE
+});
+
+app.use(bodyParser.urlencoded());
+
+app.use(function(req,res,next){
+    res.setHeader("Access-Control-Allow-Orgin","*");
+    next();
+});
+
+app.post("/get_messages" , function(req,result){
+    var email = show.email;
+    db.query("SELECT * FROM chat WHERE receiver = ('" + req.body.receiver + "') AND sender = ('" + show.email + "') AND receiver = ('" + show.email + "') AND sender = ('" + req.body.receiver + "')", function(error,message){
+        result.end(JSON.stringify(message));
+        console.log(result.end(JSON.stringify(message)));
+    });
+});
+
+var users = [];
+ 
+io.on("connection", function (socket) {
+
+    console.log("User connected", socket.id);
+
+    socket.on("user_connected", function (username) {
+        users[username] = socket.id;
+        io.emit("user_connected", username);
+    });
+
+    socket.on("send_message", function(data){
+        var socketId = users[data.receiver];
+        io.to(socketId).emit("new_message",data);
+        db.query("INSERT INTO chat (sender, receiver, message) VALUES ('" + data.sender +"', '" + data.receiver +"', '" + data.message +"')", function(error,result){
+
+        });
+    });
 });
 
 
@@ -26,10 +64,7 @@ app.use (express.json());
 app.use(cookieParser());
 
 app.set("view engine" , "hbs");
-//app.engine('handlebars', handlebars({
-  //  layoutsDir: __dirname + '/views',
-    //extname: "hbs"
-   // }));
+
 
 
 db.connect((error)=>{
@@ -48,7 +83,7 @@ app.use("/walletBackend" ,require("./routes/walletBackend"));
 app.use("/accDelete" , require("./routes/accDelete"));
 
 
-app.listen(8080,() => {
+http.listen(8080,() => {
     console.log("Server is on fleek")
 });
 
