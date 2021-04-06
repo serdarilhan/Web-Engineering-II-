@@ -193,8 +193,9 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>{{crypto}}</p>
-                        <p>{{kontostand}}</p>
+                        <div style="width: 50px">
+                            <p>{{crypto}} <br> {{kontostand}}</p>
+                        </div>
 
                         <div class="form-group">
                             <form class="form-signin" action="/auth/logout" method="POST">
