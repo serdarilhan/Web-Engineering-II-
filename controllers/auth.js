@@ -91,9 +91,6 @@ exports.login = async (req, res) => {
                     httpOnly: true
                 }
                 res.cookie("jwt", token, cookieoptions);
-
-
-
                 res.status(200).redirect("../home");
             }
             exports.email = email;

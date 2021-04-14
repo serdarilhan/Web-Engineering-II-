@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/style.css">
 
 
@@ -14,6 +12,12 @@
 </head>
 
 <body>
+
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+        integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 
     <nav>
@@ -23,92 +27,160 @@
         <div id="indicator"></div>
 
     </nav>
-    <form class="form-signin" action="/auth/logout" method="POST">
 
-        <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Logout</button>
-    </form>
-
-    <form onsubmit="return enterName();">
-        <input id="name" placeholder="Enter name">
-        <input type="submit">
-    </form>
-    <ul id="users"></ul>
 
     <form onsubmit="return sendMessage();">
-        <input id="message" placeholder="Enter Message">
-        <input type="submit">
+        <input id="message" placeholder="Enter message">
+        <input type="submit" value="Send">
     </form>
-    <ul id="mymessage">
+    <span id="name">{{sender}}</span>
+
+
+
+    <!--list where all messages will be displayed-->
+    <ul id="messages"></ul>
+
+
+    <script>
+        var server = "http://localhost:8080";
+        var io = io(server);
+        // sending message from client
+        io.emit("new_message", "New message");
+
+        // client will listen from server
+        io.on("new_message", function (data) {
+            /*
+            // display message
+            console.log("Server says", data);
+
+            // creates a new DOM element for li tag
+            
+
+            // show message in li item
+            li.innerHTML = data;
+
+            // append the message at the end of list
+            
+
+            */
+
+            //li.innerHTML = data.message;
+
+
+            var li = document.createElement("li");
+
+            var messages = document.getElementById("messages");
+            messages.appendChild(li);
+
+            // same here
+            li.innerHTML = "" + data.username + ": " + data.message;
+            li.setAttribute("id", data.id);
+
+            // display delete button here too
+            li.innerHTML += "<button data-id='" + data.id + "' onclick='deleteMessage(this);'>Delete</button>";
+
+        });
+
+
+        function deleteMessage(self) {
+            // get message id
+            var id = self.getAttribute("data-id");
+
+            // send event to server
+            io.emit("delete_message", id);
+
+
+            // attach listener on client
+
+        }
+
+        io.on("delete_message", function (id) {
+            // get node by id
+            console.log("du hurensohn");
+            var node = document.getElementById(id);
+            console.log("NODE:" + node);
+            node.innerHTML = "This message has been deleted";
+        });
+
+
         
-    </ul>
-    <p>{{crypto}}</p>
+
+
+
+
+    </script>
+
 
 
 
     <script>
-        var io = io("http://localhost:8080");
-        var receiver = "";
-        var sender = "";
+        $.ajax({
+            url: server + "/get_messages",
+            method: "GET",
+            success: function (response) {
+                console.log(response);
 
+                var messages = document.getElementById("messages");
 
-        function enterName() {
-            var name = document.getElementById("name").value;
-            io.emit("user_connected", name);
-            sender = name;
-            return false;
-        }
-        io.on("user_connected", function (username) {
-            var html = "";
-            html += "<li><button onclick='onUserSelected(this.innerHTML);'>" + username + "</button></li>";
-            document.getElementById("users").innerHTML += html;
-        });
+                // parse JSON to javascript object
+                var data = JSON.parse(response);
+                for (var a = 0; a < data.length; a++) {
+                    /*
+                    // creates new DOM element
+                    
 
+                    // add message content as HTML
+                    li.innerHTML = data[a].message;
 
-        function onUserSelected(username) {
+                    // append at the end of list
+                    messages.appendChild(li);
 
-            receiver = username;
+                    */
+                    var li = document.createElement("li");
+                    // give it unique id
+                    li.innerHTML = "" + data[a].username + ": " + data[a].message;
 
-            $.ajax({
-                url: "http://localhost:8080/get_messages",
-                method: "POST",
-                data: {
-                    sender: sender,
-                    receiver: receiver
-                },
-                success: function (response) {
-                    console.log(response);
+                    // add delete button
+                    li.innerHTML += "<button data-id='" + data[a].id + "' onclick='deleteMessage(this);'>Delete</button>";
 
-                    var messages = JSON.parse(response);
-                    var html = "";
-
-                    for (var a = 0; a < messages.length; a++) {
-                        html += "<li>" + messages[a].sender + " meint: " + messages[a].message + "</li>";
-                    }
-
-                    document.getElementById("mymessage").innerHTML += html;
                 }
-            });
-        }
+            }
+        });
+    </script>
+
+
+
+    
+    <script>
+
+        var username = document.getElementById("name").innerHTML;
+        console.log(username);
+
+
+        /* function setUsername() {
+            username = document.getElementById("name").innerHTML;
+            
+            // this will prevent the form from submitting   
+            return false;
+        }*/
 
 
         function sendMessage() {
-            var message = document.getElementById("message").value;
-            io.emit("send_message", {
-                sender: sender,
-                receiver: receiver,
-                message: message
+            // get message
+            var message = document.getElementById("message");
+
+            // sending message from client
+            io.emit("new_message", {
+                message: message.value,
+                username: username
             });
-            var html = "";
-            html = "<li>Du sagst: " + message + "</li>";
-            document.getElementById("mymessage").innerHTML += html;
+
+            // this will prevent the form from submitting
             return false;
         }
-        io.on("new_message", function (data) {
-            var html = "";
-            html += "<li>" + data.sender + " sagt: " + data.message + "</li>";
-            document.getElementById("mymessage").innerHTML += html;
-        });
     </script>
+
+
 
 
 </body>
