@@ -1,0 +1,25 @@
+ul {
+    list-style: none;
+}
+
+#chat {
+    margin-top: 50px;
+} 
+
+.sender {
+    /* position: absolute;
+    left: 50px; */
+    font-weight: bold;
+}
+
+#chatfield {
+    height: 500px;
+    overflow-y: scroll;
+}
+
+.form {
+    position: fixed;
+    z-index: 10;
+    background-color: white;
+    text-align: center;
+}

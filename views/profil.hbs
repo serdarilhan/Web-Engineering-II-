@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/chatstyle.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 
     <title>Profil</title>
@@ -18,27 +20,76 @@
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 
 
-    <nav>
-        <a href="/home">HOME</a>
-        <a href="/wallet">Wallet</a>
-        <a href="#">Profil</a>
-        <div id="indicator"></div>
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" id="name" href="#">{{sender}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/wallet">Wallet</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/profil">Profil<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
+    <div class="container text-center">
 
-    <form onsubmit="return sendMessage();">
-        <input id="message" placeholder="Enter message">
-        <input type="submit" value="Send">
-    </form>
-    <span id="name">{{sender}}</span>
+        <h1 style="margin-top: 2%">Gruppenchat</h1>
+        <div class="row" style="margin-top: 2%">
+
+            <div class="col-3">
+
+            </div>
+
+
+            <div class="col-6" style="border: 1px solid gray;  border-radius: 7px;">
+
+                <div id="chatfield">
+                    <div class="form">
+                        <form onsubmit="return sendMessage();" class="form-inline">
+                            <input class="form-control form-control-lg " type="text" placeholder="Nachricht eingeben"
+                                id="message">
+                            <input style="margin-left: 5px" id="senden" class="btn btn-primary btn-lg" type="submit"
+                                value="Senden">
+                        </form>
+                    </div>
+
+
+                    <!--list where all messages will be displayed-->
+                    <div id="chat">
+                        <ul id="messages"></ul>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-3">
+
+            </div>
+        </div>
+
+    </div>
 
 
 
-    <!--list where all messages will be displayed-->
-    <ul id="messages"></ul>
 
 
     <script>
@@ -73,11 +124,11 @@
             messages.appendChild(li);
 
             // same here
-            li.innerHTML = "" + data.username + ": " + data.message;
+            li.innerHTML = "<span class='sender'>" + data.username + ":</span> <br><span style='font-size: 135%'>" + data.message + "</span>";
             li.setAttribute("id", data.id);
 
             // display delete button here too
-            li.innerHTML += "<button data-id='" + data.id + "' onclick='deleteMessage(this);'>Delete</button>";
+            li.innerHTML += "<button class='btn btn-outline-danger' style='position: relative; right: 0px; margin-bottom: 15px;' data-id='" + data.id + "' onclick='deleteMessage(this);'>Delete</button><hr>";
 
         });
 
@@ -99,7 +150,7 @@
             console.log("du hurensohn");
             var node = document.getElementById(id);
             console.log("NODE:" + node);
-            node.innerHTML = "This message has been deleted";
+            node.innerHTML = "This message has been deleted" + "<hr>";
         });
 
     </script>
@@ -130,18 +181,22 @@
                     messages.appendChild(li);
 
                     */
-                    console.log("du hurebsohne");
                     var li = document.createElement("li");
                     messages.appendChild(li);
                     // give it unique id
-                    li.innerHTML = "" + data[a].sender + ": " + data[a].message;
+                    li.innerHTML = "<span class='sender'>" + data[a].sender + ":</span> <br><span style='font-size: 135%'>" + data[a].message + "</span>";
 
                     // add delete button
-                    li.innerHTML += "<button data-id='" + data[a].id + "' onclick='deleteMessage(this);'>Delete</button>";
+                    li.innerHTML += "<button class='btn btn-outline-danger' style='position: relative; right: 0px; margin-bottom: 15px;' data-id='" + data[a].id + "' onclick='deleteMessage(this);'>Delete</button><br><hr>";
 
                 }
             }
         });
+
+
+        $("#senden").click(function () {
+            $("#chatfield").animate({ scrollTop: $('#chatfield').prop("scrollHeight") }, 1000);
+        })
     </script>
 
 
@@ -168,7 +223,7 @@
             var message = document.getElementById("message");
 
             var username = document.getElementById("name").innerHTML;
-        console.log(username);
+            console.log(username);
 
             // sending message from client
             io.emit("new_message", {
