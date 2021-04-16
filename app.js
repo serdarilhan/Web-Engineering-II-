@@ -9,8 +9,7 @@ var io = require("socket.io")(http);
 dotenv.config({ path: './.env' });
 var bodyParser = require("body-parser");
 const show = require("./controllers/auth");
-
-
+const { data } = require("jquery");
 
 
 const db = mysql.createConnection({
@@ -20,20 +19,18 @@ const db = mysql.createConnection({
     database: process.env.DATABASE
 });
 
-//app.use(bodyParser.urlencoded());
+// app.use(bodyParser.urlencoded());
+
+
+
+
+
 
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Orgin", "*");
     next();
 });
 
-app.post("/get_messages", function (req, result) {
-    var email = show.email;
-    db.query("SELECT * FROM chat WHERE receiver = ('" + req.body.receiver + "') AND sender = ('" + show.email + "') AND receiver = ('" + show.email + "') AND sender = ('" + req.body.receiver + "')", function (error, message) {
-        result.end(JSON.stringify(message));
-        console.log(result.end(JSON.stringify(message)));
-    });
-});
 
 var users = [];
 
@@ -46,15 +43,18 @@ io.on("connection", function (socket) {
     socket.on("new_message", function (data) {
 
         // save message in database
-        db.query("INSERT INTO chat (sender, message) VALUES('" + data.username + "', '" + data.message + "')", function (error, result) {
-            data.id = result.insertId;
-            io.emit("new_message", data);
-        });
+        if(data.username != undefined || data.message != undefined) {
+            db.query("INSERT INTO chat (sender, message) VALUES('" + data.username + "', '" + data.message + "')", function (error, result) {
+                data.id = result.insertId;
+                io.emit("new_message", data);
+            }); 
+        }
+        
     });
 
 
     //attach listener to server
-    socket.on("delete_message", function (messageId) {
+    socket.on("delete_message", function (messageId, data) {
         // delete from database
         db.query("DELETE FROM chat WHERE id = '" + messageId + "'", function (error, result) {
             // send event to all users
@@ -71,10 +71,10 @@ io.on("new_message", function (data) {
 
     // server should listen from each client via it's socket
     socket.on("new_message", function (data) {
-        console.log("Client says", data);
+        // console.log("Client says", data);
 
         // save message in database
-        db.query("INSERT INTO chat (message) VALUES ('" + data + "')", function (error, result) {
+        db.query("INSERT INTO chat (sender, message) VALUES ('" + data.username + "', '" + data.message + "')", function (error, result) {
             // server will send message to all connected clients
             io.emit("new_message", {
                 id: result.insertId,
@@ -97,6 +97,7 @@ app.get("/get_messages", function (request, result) {
     db.query("SELECT * FROM chat", function (error, messages) {
         // return data will be in JSON format
         result.end(JSON.stringify(messages));
+        console.log(messages[1]);
     });
 });
 

@@ -102,12 +102,6 @@
             node.innerHTML = "This message has been deleted";
         });
 
-
-        
-
-
-
-
     </script>
 
 
@@ -136,9 +130,11 @@
                     messages.appendChild(li);
 
                     */
+                    console.log("du hurebsohne");
                     var li = document.createElement("li");
+                    messages.appendChild(li);
                     // give it unique id
-                    li.innerHTML = "" + data[a].username + ": " + data[a].message;
+                    li.innerHTML = "" + data[a].sender + ": " + data[a].message;
 
                     // add delete button
                     li.innerHTML += "<button data-id='" + data[a].id + "' onclick='deleteMessage(this);'>Delete</button>";
@@ -150,8 +146,10 @@
 
 
 
-    
+
+
     <script>
+
 
         var username = document.getElementById("name").innerHTML;
         console.log(username);
@@ -168,6 +166,9 @@
         function sendMessage() {
             // get message
             var message = document.getElementById("message");
+
+            var username = document.getElementById("name").innerHTML;
+        console.log(username);
 
             // sending message from client
             io.emit("new_message", {
