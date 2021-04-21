@@ -19,24 +19,8 @@ const show = require("./controllers/auth");
 const db = require("./models");
 
 const {chatorm} = require("./models/chatorm");
+const {userorm} = require("./models");
 
-db.sequelize.sync().then((req)=>{
-    chatorm.create({
-        sender: "",
-        message: "",
-    }).catch((err)=>{
-        if(err){
-            console.log(err);
-        }
-    }); 
-})
- 
-
-
-/* app.use(function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Orgin", "*");
-    next();
-}); */
 
 
 var users = [];
@@ -109,7 +93,22 @@ app.get("/get_messages", function (request, result) {
     }); */
 });
 
-
+/* app.get("/insert",(req,res)=>{
+    userorm.create({
+        name: "name",
+        email: "email",
+        passwort: "hashedPasswort",
+        crypto: "cryptoHashed",
+        kontostand: 100,
+        mining: 0,
+    }).catch((err) => {
+        if (err) {
+            console.log(err);
+        }
+    }) 
+  console.log("Moin Meister");
+   
+}); */
 
 
 const publicDirectory = path.join(__dirname, "./public");
@@ -138,8 +137,8 @@ app.use("/auth", require("./routes/auth"));
 app.use("/walletBackend", require("./routes/walletBackend"));
 app.use("/accDelete", require("./routes/accDelete"));
 
-
+db.sequelize.sync().then((req)=>{
 http.listen(8080, () => {
     console.log("Server is on fleek")
 });
-
+});

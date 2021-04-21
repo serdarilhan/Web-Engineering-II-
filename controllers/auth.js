@@ -3,13 +3,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-const db = require("../models");
-const { userorm } = require("../models/userorm");
-const { Model } = require("sequelize"); 
-const { use } = require("../routes/pages");
-/* OrmUser.sequelize.sync().then((req) => {
-    console.log("Orm amk");
-}) */
+
+//console.log(db);
+
+
 
 // const db = mysql.createConnection({
 //     host: process.env.DATABASE_HOST,
@@ -19,58 +16,69 @@ const { use } = require("../routes/pages");
 // });
 
 
-exports.index = (req, res) => {
-    console.log(req.body);
-    const { name, email, passwort, passwortWiederholen } = req.body;
-    let hashedPasswort = bcrypt.hash(passwort, 8);
-    const current_date = (new Date()).valueOf().toString();
-    const random = Math.random().toString();
-    const cryptoHashed = crypto.createHash('sha256').update(current_date + random).digest('hex');
+
+/*  console.log("hbeihv");
+ return users; */
+
+
+
+module.exports.index = (orm) => {
+    /* exports.index = async(req, res) => { */
+    //const userorm =  require("../models/userorm");
+    //console.log(userorm + "Moin");
     //const { emailVergeben } = require("sequelize");
-
-    
-    
-
-   const emailVergeben =  userorm.findAll({where: {email: email}}).then((req)=>{
-        
-    }).catch((err) => {
-        if (err) {
-            console.log(err);
-        }
-    });
-
-    console.log(emailVergeben);
-
-    if (emailVergeben > 0) {
-        return res.render("index", {
-            message: " Email schon vergeben"
-        })
-    } else if (passwort !== passwortWiederholen) {
-        return res.render("index", {
-            message: "Passwort stimmt nicht überein!"
-        })
-    } else {
-   /*  db.sequelize.sync().then((req)=>{ */
-       userorm.create({
+    //onst db = require("../models");
+    const userorm = require("../models/userorm");
+    orm.get("/userorm", (req, res) => {
+        console.log(req.body);
+        const { name, email, passwort, passwortWiederholen } = req.body;
+        let hashedPasswort = bcrypt.hash(passwort, 8);
+        const current_date = (new Date()).valueOf().toString();
+        const random = Math.random().toString();
+        const cryptoHashed = crypto.createHash('sha256').update(current_date + random).digest('hex');
+        userorm.create({
             name: name,
             email: email,
             passwort: hashedPasswort,
             crypto: cryptoHashed,
-            kontostand: 100.0,
-            mining: 0.0,
+            kontostand: 100,
+            mining: 0,
         }).catch((err) => {
             if (err) {
                 console.log(err);
             }
-        })
+        }) 
         res.render("index", {
             message: "User ist regestriert"
-
         })
-    //});
+        res.status(200).redirect("../login");
+       
+    });
 
-    
-}
+
+
+
+
+
+
+    /*    const emailVergeben = user.findAll({where: {email: email}}).then((req)=>{}).catch((err) => {if (err) {console.log(err);}});
+     */ //  const emailVergeben =  db.sequelize.query("SELECT email FROM user");
+    //console.log(emailVergeben);
+
+    /*     if (emailVergeben > 0) {
+            return res.render("index", {
+                message: " Email schon vergeben"
+            })
+        } else if (passwort !== passwortWiederholen) {
+            return res.render("index", {
+                message: "Passwort stimmt nicht überein!"
+            })
+        } else { */
+    /* db.sequelize.sync().then((req)=>{  */
+
+
+    //   });
+    //}
 
 
 
@@ -120,38 +128,38 @@ exports.index = (req, res) => {
 
 exports.login = async (req, res) => {
     /* try { */
-        
-        var { email, passwort } = req.body;
 
-        if (!email || !passwort) {
-            return res.status(401).render('login', {
-                message: "Schauen Sie noch einmal!"
-            })
-        }
+    var { email, passwort } = req.body;
 
-        // db.query("SELECT * FROM user WHERE email = ?", [email], async (error, results) => {
-        //     console.log(results);
-        //     if (!results || !(await bcrypt.compare(passwort, results[0].passwort))) {
-        //         res.status(401).render("login", {
-        //             message: "Email oder Passwort ist nicht korrekt!!!"
-        //         })
-        //     } else {
-        //         const id = results[0].id;
-        //         const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
-        //             expiresIn: process.env.JWT_EXPIRES_IN
-        //         });
-        //         console.log("Token ist:" + token);
-        //         const cookieoptions = {
-        //             expires: new Date(
-        //                 Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-        //             ),
-        //             httpOnly: true
-        //         }
-        //         res.cookie("jwt", token, cookieoptions);
-        //         res.status(200).redirect("../home");
-        //     }
-        //     exports.email = email;
-        // })  
+    if (!email || !passwort) {
+        return res.status(401).render('login', {
+            message: "Schauen Sie noch einmal!"
+        })
+    }
+
+    // db.query("SELECT * FROM user WHERE email = ?", [email], async (error, results) => {
+    //     console.log(results);
+    //     if (!results || !(await bcrypt.compare(passwort, results[0].passwort))) {
+    //         res.status(401).render("login", {
+    //             message: "Email oder Passwort ist nicht korrekt!!!"
+    //         })
+    //     } else {
+    //         const id = results[0].id;
+    //         const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
+    //             expiresIn: process.env.JWT_EXPIRES_IN
+    //         });
+    //         console.log("Token ist:" + token);
+    //         const cookieoptions = {
+    //             expires: new Date(
+    //                 Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+    //             ),
+    //             httpOnly: true
+    //         }
+    //         res.cookie("jwt", token, cookieoptions);
+    //         res.status(200).redirect("../home");
+    //     }
+    //     exports.email = email;
+    // })  
 
 
 

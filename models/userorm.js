@@ -1,8 +1,6 @@
-const { DataTypes } = require(".");
-const { sequelize } = require(".");
 
 module.exports = (sequelize,DataTypes) => {
-    const user = sequelize.define("user",{
+    const userorm = sequelize.define("userorm",{
         // id: {
         //     type: DataTypes.INTEGER,
         //     allowNull: false,
@@ -40,19 +38,19 @@ module.exports = (sequelize,DataTypes) => {
             },
         },
         kontostand: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
                 notEmpty: true,
             },
         },
         mining: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
                 notEmpty: true,
             },
         },
     });
-    return user;
+    return userorm;
 };
