@@ -23,14 +23,13 @@ const db = mysql.createConnection({
 app.use(bodyParser.urlencoded());
 
 
+// app.use(bodyParser.urlencoded());
 
+const db = require("./models");
 
+const {chatorm} = require("./models/chatorm");
+const {userorm} = require("./models");
 
-
-app.use(function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Orgin", "*");
-    next();
-});
 
 
 var users = [];
@@ -42,7 +41,7 @@ io.on("connection", function (socket) {
 
     // server should listen from each client via it's socket
     socket.on("new_message", function (data) {
-
+        
         // save message in database
         if (data.username != undefined || data.message != undefined) {
             db.query("INSERT INTO chat (sender, message) VALUES('" + data.username + "', '" + data.message + "')", function (error, result) {
@@ -160,4 +159,3 @@ app.post("/addTestUser", function (req, res) {
 http.listen(8080, () => {
     console.log("Server is on fleek")
 });
-
