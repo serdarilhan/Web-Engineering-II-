@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model chat {
+  id      Int    @id @default(autoincrement())
+  sender  String @db.VarChar(255)
+  message String @db.Text
+}
+
+model transaction {
+  id       Int      @id @default(autoincrement())
+  sender   String   @db.VarChar(256)
+  receiver String   @db.VarChar(256)
+  amount   Float    @db.Float
+  date     DateTime @db.DateTime(0)
+  info     String   @db.VarChar(256)
+}
+
+model user {
+  id         Int    @id @default(autoincrement())
+  name       String @db.VarChar(256)
+  email      String @db.VarChar(256)
+  passwort   String @db.VarChar(256)
+  crypto     String @db.VarChar(256)
+  kontostand Float  @db.Float
+  mining     Float  @db.Float
+}
+
