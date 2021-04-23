@@ -23,15 +23,6 @@ const db = mysql.createConnection({
 app.use(bodyParser.urlencoded());
 
 
-// app.use(bodyParser.urlencoded());
-
-const db = require("./models");
-
-const {chatorm} = require("./models/chatorm");
-const {userorm} = require("./models");
-
-
-
 var users = [];
 
 // add listener for new connection
