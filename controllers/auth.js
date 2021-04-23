@@ -135,34 +135,42 @@ exports.login = async (req, res) => {
         }
 
         async function login() {
-            const emailprisma = await prisma.$queryRaw('SELECT * FROM user WHERE email = ?', email);
-            console.log("Passwort: " + emailprisma[0].passwort);
+            const emailvorhanden = await prisma.$queryRaw('SELECT email FROM user WHERE email = ?', email);
+            if (emailvorhanden.length >= 1) {
+                const emailprisma = await prisma.$queryRaw('SELECT * FROM user WHERE email = ?', email);
+                console.log("Passwort: " + emailprisma[0].passwort);
 
-            if (!emailprisma || !(await bcrypt.compare(passwort, emailprisma[0].passwort))) {
-                res.status(401).render("login", {
-                    message: "Email oder Passwort ist nicht korrekt!!!"
-                })
-            } else {
-                const id = emailprisma[0].id;
-                const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
-                    expiresIn: process.env.JWT_EXPIRES_IN
-                });
-                console.log("Token ist:" + token);
-                const cookieoptions = {
-                    expires: new Date(
-                        Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-                    ),
-                    httpOnly: true
+                if (!emailprisma || !(await bcrypt.compare(passwort, emailprisma[0].passwort))) {
+                    res.status(401).render("login", {
+                        message: "Email oder Passwort ist nicht korrekt!!!"
+                    })
+                } else {
+                    const id = emailprisma[0].id;
+                    const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
+                        expiresIn: process.env.JWT_EXPIRES_IN
+                    });
+                    console.log("Token ist:" + token);
+                    const cookieoptions = {
+                        expires: new Date(
+                            Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+                        ),
+                        httpOnly: true
+                    }
+                    res.status(200).redirect("../home");
+                    res.cookie("jwt", token, cookieoptions);
+                    res.send("jwt: " + token);
                 }
-                res.cookie("jwt", token, cookieoptions);
-                res.status(200).redirect("../home");
-                res.send("jwt: " + token);
+                return email;
+            } else {
+                console.log("E-Mail nicht vorhanden");
+                res.redirect("/login");
             }
-            return email;           
+
+            
         }
         login();
-        exports.email = email; 
-    } catch(error) {
+        exports.email = email;
+    } catch (error) {
         console.log(error);
     }
 }
