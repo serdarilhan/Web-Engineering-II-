@@ -29,15 +29,19 @@ exports.wallet = (req, res) => {
             });
             console.log("Fehler es ist ihre Adresse!!!");
         }
-        console.log(adresse);
+        //console.log(adresse);
+
+
         db.query("SELECT crypto FROM user WHERE crypto = ?", [adresse], function (err, result) {
+            console.log(result[0]);
             if (err) {
                 console.log(err);
             }
-            if (result[0].crypto !== adresse) {
+            if (result[0] !== adresse || result[0] == undefined) {
                 console.log("Keine gültige Adresse");
-                console.log(result);
+                console.log("Hallo " + result);
                 res.render("wallet", { message2: "Keine gültige Adresse" });
+                //res.redirect("../wallet");
             } else {
                 db.query("SELECT kontostand FROM user WHERE email = ?", [email], function (err, result) {
                     if (err) {
@@ -77,6 +81,7 @@ exports.wallet = (req, res) => {
             }
         })
     });
+    //res.status(200).redirect("/wallet");
 
 }
 

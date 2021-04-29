@@ -198,6 +198,11 @@
                         </div>
 
                         <div class="form-group">
+                            <form class="form-signin" action="/accDelete/changeName" method="POST">
+                                <input type="text" class="form-control" name="changeName">
+                                <button class="btn btn-dark mb-3" type="submit">Namen ändern</button>
+                            </form>
+
                             <form class="form-signin" action="/auth/logout" method="POST">
                                 <button class="btn btn-dark mb-3" type="submit">Logout</button>
                             </form>
@@ -243,18 +248,16 @@
             <p>{{name}}</p> --}}
         </div>
 
-        <p>{{message1}}</p>
-        <p>{{message2}}</p>
+            
+    </div>
+        {{!-- <script>alert("{{message1}}")</script> --}}
+        <script>alert("{{message2}}")</script>
         <p>{{message3}}</p>
         <p>{{message4}}</p>
         <p>{{message5}}</p>
         <p>{{message6}}</p>
         <p>{{message7}}</p>
         <p>{{message8}}</p>
-
-        
-    </div>
-
 
 
 
