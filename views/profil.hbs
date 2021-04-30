@@ -97,54 +97,35 @@
         var io = io(server);
         // sending message from client
         io.emit("new_message", "New message");
-
         // client will listen from server
         io.on("new_message", function (data) {
             /*
             // display message
             console.log("Server says", data);
-
             // creates a new DOM element for li tag
             
-
             // show message in li item
             li.innerHTML = data;
-
             // append the message at the end of list
             
-
             */
-
             //li.innerHTML = data.message;
-
-
             var li = document.createElement("li");
-
             var messages = document.getElementById("messages");
             messages.appendChild(li);
-
             // same here
             li.innerHTML = "<span class='sender'>" + data.username + ":</span> <br><span style='font-size: 135%'>" + data.message + "</span>";
             li.setAttribute("id", data.id);
-
             // display delete button here too
             li.innerHTML += "<button class='btn btn-outline-danger' style='position: relative; right: 0px; margin-bottom: 15px;' data-id='" + data.id + "' onclick='deleteMessage(this);'>Delete</button><hr>";
-
         });
-
-
         function deleteMessage(self) {
             // get message id
             var id = self.getAttribute("data-id");
-
             // send event to server
             io.emit("delete_message", id);
-
-
             // attach listener on client
-
         }
-
         io.on("delete_message", function (id) {
             // get node by id
             console.log("du hurensohn");
@@ -152,7 +133,6 @@
             console.log("NODE:" + node);
             node.innerHTML = "This message has been deleted" + "<hr>";
         });
-
     </script>
 
 
@@ -164,36 +144,27 @@
             method: "GET",
             success: function (response) {
                 console.log(response);
-
                 var messages = document.getElementById("messages");
-
                 // parse JSON to javascript object
                 var data = JSON.parse(response);
                 for (var a = 0; a < data.length; a++) {
                     /*
                     // creates new DOM element
                     
-
                     // add message content as HTML
                     li.innerHTML = data[a].message;
-
                     // append at the end of list
                     messages.appendChild(li);
-
                     */
                     var li = document.createElement("li");
                     messages.appendChild(li);
                     // give it unique id
                     li.innerHTML = "<span class='sender'>" + data[a].sender + ":</span> <br><span style='font-size: 135%'>" + data[a].message + "</span>";
-
                     // add delete button
                     li.innerHTML += "<button class='btn btn-outline-danger' style='position: relative; right: 0px; margin-bottom: 15px;' data-id='" + data[a].id + "' onclick='deleteMessage(this);'>Delete</button><br><hr>";
-
                 }
             }
         });
-
-
         $("#senden").click(function () {
             $("#chatfield").animate({ scrollTop: $('#chatfield').prop("scrollHeight") }, 1000);
         })
@@ -204,36 +175,26 @@
 
 
     <script>
-
-
         var username = document.getElementById("name").innerHTML;
         console.log(username);
-
-
         /* function setUsername() {
             username = document.getElementById("name").innerHTML;
             
             // this will prevent the form from submitting   
             return false;
         }*/
-
-
         function sendMessage() {
             
             // get message
             var message = document.getElementById("message");
-
             var username = document.getElementById("name").innerHTML;
             console.log(username);
-
             // sending message from client
             io.emit("new_message", {
                 message: message.value,
                 username: username
             });
-
             document.getElementById("message").value = "";
-
             // this will prevent the form from submitting
             return false;
         }

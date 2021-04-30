@@ -115,6 +115,15 @@ app.use("/walletBackend", require("./routes/walletBackend"));
 app.use("/accDelete", require("./routes/accDelete"));
 
 
+app.get("/get_mining", function (request, result) {
+    db.query("SELECT * FROM user WHERE email = ?", [show.email], function (error, mining) {
+        // return data will be in JSON format
+        result.end(JSON.stringify(mining));
+        console.log(mining[5]);
+    });
+
+});
+
 
 
 // create API for get_message
@@ -126,6 +135,7 @@ app.get("/get_messages", function (request, result) {
     });
 
 });
+
 
 app.delete("/deleteMessages", function (req, res) {
     //res.send("hallo");

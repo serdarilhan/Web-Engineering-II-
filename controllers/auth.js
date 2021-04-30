@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
+const t = require("../controllers/walletBackend");
+
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -131,6 +133,12 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
+
+    function stop() { 
+        clearInterval(t.t) 
+    };
+    
+    stop();
     res.clearCookie('jwt');
     res.status(200).redirect("../login");
 }

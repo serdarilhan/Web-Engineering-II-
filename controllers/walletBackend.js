@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const show = require("../controllers/auth");
+const t = require("../controllers/walletBackend");
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -129,8 +130,13 @@ exports.mining = (req, res) => {
                         //});
                         console.log(count);
                         db.query("UPDATE user SET ? WHERE email = ?", [{ mining: count }, email]);
+                        return count;
                     }
+
                 }
+                var t = setInterval(counter, 2000);
+
+                exports.t = t;
 
                 db.query("SELECT crypto FROM user WHERE email = ?", [email], function (err, result) {
                     if (err) {
@@ -141,7 +147,10 @@ exports.mining = (req, res) => {
                     db.query('INSERT INTO transaction SET ?', { sender: mining_crypto, receiver: mining_crypto, amount: amountMining, date: datum, info: "Mining" });
                 });
 
-                res.status(200).redirect("/wallet");
+                
+
+                res.redirect("back");
+                
 
             }
         })
@@ -154,7 +163,13 @@ exports.auszahlen = (req, res) => {
     var amountAuszahlen = req.body.auszahlen;
     var amountMining = parseFloat(amountAuszahlen);
     var email = show.email;
-
+    // console.log("T: " + t.t);
+    
+    function stop() { 
+        clearInterval(t.t) 
+    };
+    
+    stop();
 
     db.query("SELECT mining FROM user WHERE email = ?", [email], function (err, result) {
         if (err) {
@@ -186,6 +201,7 @@ exports.auszahlen = (req, res) => {
                     var auszahlen_crypto = result[0].crypto;
                     var datum = new Date();
                     db.query('INSERT INTO transaction SET ?', { sender: auszahlen_crypto, receiver: auszahlen_crypto, amount: amountMining, date: datum, info: "Auszahlen" });
+                    
                 });
             })
             res.status(200).redirect("../wallet");
