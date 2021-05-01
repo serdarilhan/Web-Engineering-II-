@@ -229,7 +229,11 @@
             <hr>
 
             <h2>Letzte Zahlungen an</h2>
-            <p style="font-size: 2em;">Platzhalter</p>
+             <ul id="list">
+                {{#each History}}
+                <li id="sucheliste">{{this}}</li>
+                {{/each}}
+            </ul> <style>ul { list-style: none } </style>
 
             <hr>
 
@@ -241,16 +245,13 @@
             <h2>Mining-Stand</h2>
             <p id="miningstand" style="font-size: 4em;">{{mining}}</p>
 
-            {{!-- <p>{{kontostand}}</p>
-            <p>{{mining}}</p>
-            <p>{{History}}</p>
-            <p>{{name}}</p> --}}
+           
         </div>
 
 
     </div>
-    
-    <script>alert("{{message1}}")</script> 
+
+    <script>alert("{{message1}}")</script>
     <script>alert("{{message2}}")</script>
     <script>alert("{{message3}}")</script>
     <script>alert("{{message4}}")</script>
