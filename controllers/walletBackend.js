@@ -38,9 +38,9 @@ exports.wallet = (req, res) => {
             if (err) {
                 console.log(err);
             }
-            if (result[0] !== adresse || result[0] == undefined) {
+            if (result[0] == undefined) {
                 console.log("Keine gültige Adresse");
-                console.log("Hallo " + result);
+                //console.log("Hallo " + result[0]);
                 res.render("wallet", { message2: "Keine gültige Adresse" });
                 //res.redirect("../wallet");
             } else {
@@ -78,11 +78,11 @@ exports.wallet = (req, res) => {
 
                     }
                 })
-                res.status(200).redirect("/wallet");
             }
         })
     });
-    //res.status(200).redirect("/wallet");
+    res.status(200).redirect("back");
+
 
 }
 

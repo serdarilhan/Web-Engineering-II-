@@ -17,7 +17,22 @@ router.get("/login", (req, res) => {
     res.render("login");
 });
 router.get("/home", (req, res) => {
-    res.render("home");
+    db.query("SELECT name,crypto FROM user",function(err,result){
+        if(err){
+            console.log(err);
+        }
+        var liste = JSON.stringify(result);
+       let array = []
+        for(i in result){
+            array.push(result[i].name + " " + ":" + " " + result[i].crypto);
+       }
+        
+        res.render("home",{
+            liste:array
+        });
+      
+    })
+   
 });
 router.get("/profil", (req, res) => {
     console.log(show.email);
