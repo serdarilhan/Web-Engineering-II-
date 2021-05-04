@@ -10,7 +10,5 @@ router.post("/mining", walletController.mining);
 router.post("/auszahlen", walletController.auszahlen);
 
 
-
-
-
 module.exports = router;
+//Wallet Route für die Funktionen minen,auszaheln und Transaktion

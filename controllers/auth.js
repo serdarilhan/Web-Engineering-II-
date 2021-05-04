@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({ //Datenbank verbindung mit mysql
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
@@ -19,7 +19,8 @@ const db = mysql.createConnection({
 
 
 exports.index = (req, res) => {
-    //console.log(req.body);
+    
+    //ALTER CODE OHNE ORM FÜR DIE DATENBANK
 
 
     /*    const emailVergeben = user.findAll({where: {email: email}}).then((req)=>{}).catch((err) => {if (err) {console.log(err);}});
@@ -42,28 +43,28 @@ exports.index = (req, res) => {
     //}
     const { name, email, passwort, passwortWiederholen } = req.body;
 
-    async function register() {
+    async function register() { //Regestrieren 
         const emailprisma = await prisma.$queryRaw('SELECT email FROM user WHERE email = ?', email);
         console.log(emailprisma);
         if (emailprisma.length >= 1) {
             return res.render("index", {
-                message: " Email schon vergeben"
+                message: " Email schon vergeben"   //Abfrage ob die Email existiert 
             })
         } else if (passwort !== passwortWiederholen) {
             return res.render("index", {
-                message: "Passwort stimmt nicht überein!"
+                message: "Passwort stimmt nicht überein!" //Das Passwort wiederholen
             })
         } else {
             var kontostand = 100;
             var mining = 0;
-            let hashedPasswort = await bcrypt.hash(passwort, 8);
+            let hashedPasswort = await bcrypt.hash(passwort, 8); //Passwort mit bycrpt hashen 
             console.log(hashedPasswort);
-            const current_date = (new Date()).valueOf().toString();
+            const current_date = (new Date()).valueOf().toString(); //Datum erzeugen
             const random = Math.random().toString();
-            const cryptoHashed = crypto.createHash('sha256').update(current_date + random).digest('hex');
+            const cryptoHashed = crypto.createHash('sha256').update(current_date + random).digest('hex'); //crypto-adresse erzeugen
             console.log(cryptoHashed);
 
-            await prisma.user.create({
+            await prisma.user.create({ //User wird regestriert mit einem Start Kontostand von 100 Coins
                 data: {
                     name: name,
                     email: email,
@@ -91,7 +92,7 @@ exports.login = async (req, res) => {
         //     })
         // }
 
-        async function login() {
+        async function login() { //Login
             const emailvorhanden = await prisma.$queryRaw('SELECT email FROM user WHERE email = ?', email);
             if (emailvorhanden.length >= 1) {
                 const emailprisma = await prisma.$queryRaw('SELECT * FROM user WHERE email = ?', email);
@@ -99,12 +100,12 @@ exports.login = async (req, res) => {
 
                 if (!emailprisma || !(await bcrypt.compare(passwort, emailprisma[0].passwort))) {
                     res.status(401).render("login", {
-                        message: "Email oder Passwort ist nicht korrekt!!!"
+                        message: "Email oder Passwort ist nicht korrekt!!!" //Falls Email oder Passwort nicht korrekt ist
                     })
                 } else {
                     const id = emailprisma[0].id;
                     const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
-                        expiresIn: process.env.JWT_EXPIRES_IN
+                        expiresIn: process.env.JWT_EXPIRES_IN //JSON Web-token wird erstellt über JWT
                     });
                     console.log("Token ist: " + token);
                     const cookieoptions = {
@@ -132,7 +133,7 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.logout = (req, res) => {
+exports.logout = (req, res) => { //Logout der Web-token wird gelöscht
 
     function stop() { 
         clearInterval(t.t) 
