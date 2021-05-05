@@ -58,7 +58,7 @@
 <input type="text" id="input" onkeyup="myFunction()" placeholder="Suche nach Personen..">
 
 <script>
-function myFunction() {
+function myFunction() { //String wird zeichen für zeichen durchgegangen bei keinem Treffer werden die Datensätze nicht angezeigt. Suche nach Personen
 
   var input, filter, ul, li, a, i, txtValue;
   input = document.getElementById('input');
@@ -84,7 +84,7 @@ function myFunction() {
         {{#each liste}}
         <li id="sucheliste"><a href="#">{{this}}</a></li>
         {{/each}}
-   </ul>
+   </ul> {{!-- Liste der User werden angezeigt --}}
 
 </body>
 

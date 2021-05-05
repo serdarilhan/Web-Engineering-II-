@@ -3,20 +3,20 @@ const router = express.Router();
 const mysql = require("mysql");
 const show = require("../controllers/auth");
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({ // Datenbank verbindung mit mysql
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE
 });
-router.get("/", (req, res) => {
+router.get("/", (req, res) => { //Registrieren anzeigen 
     res.render("index");
 });
 
-router.get("/login", (req, res) => {
+router.get("/login", (req, res) => { //Login anzeigen 
     res.render("login");
 });
-router.get("/home", (req, res) => {
+router.get("/home", (req, res) => {//Home anzeigen 
     db.query("SELECT name,crypto FROM user",function(err,result){
         if(err){
             console.log(err);
@@ -27,14 +27,14 @@ router.get("/home", (req, res) => {
             array.push(result[i].name + " " + ":" + " " + result[i].crypto);
        }
         
-        res.render("home",{
+        res.render("home",{ //Alle registrierten User mit name und Crypto-Adresse anzeigen
             liste:array
         });
       
     })
    
 });
-router.get("/profil", (req, res) => {
+router.get("/profil", (req, res) => { //Im Chat der Sender namen anzeigen
     console.log(show.email);
     db.query("SELECT name FROM user WHERE email = ?", [show.email], function (err, result) {
         if (err) {
@@ -46,7 +46,7 @@ router.get("/profil", (req, res) => {
         }); 
     });
 });
-router.get("/wallet", (req, res) => {
+router.get("/wallet", (req, res) => { // Zahlungshistorie anzeigen 
 
     db.query("SELECT kontostand FROM user WHERE email = ?", [show.email], function (err, result) {
         if (err) {

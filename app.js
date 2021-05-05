@@ -25,15 +25,15 @@ app.use(bodyParser.urlencoded());
 
 var users = [];
 
-// add listener for new connection
+// Listener für neue Verbindung hinzufügen
 io.on("connection", function (socket) {
-    // this is socket for each user
+    //dies sind die Sockets für jeden Benutzer
     console.log("User connected", socket.id);
 
-    // server should listen from each client via it's socket
+    // Server lauscht von jedem Client über seinen Socket 
     socket.on("new_message", function (data) {
         
-        // save message in database
+        // message speichern in Datenbank
         if (data.username != undefined || data.message != undefined) {
             db.query("INSERT INTO chat (sender, message) VALUES('" + data.username + "', '" + data.message + "')", function (error, result) {
                 data.id = result.insertId;
@@ -45,11 +45,11 @@ io.on("connection", function (socket) {
     });
 
 
-    //attach listener to server
+    //Listener an den Server anhängen
     socket.on("delete_message", function (messageId, data) {
-        //delete from database
+        //delete von Datenbank
         db.query("DELETE FROM chat WHERE id = '" + messageId + "'", function (error, result) {
-            // send event to all users
+            // event an jeden user
             io.emit("delete_message", messageId);
         });
         
@@ -58,17 +58,17 @@ io.on("connection", function (socket) {
 });
 
 
-// client will listen from server
+// Client wird vom Server abgehört
 io.on("new_message", function (data) {
     // console.log("Server says", data);
 
-    // server should listen from each client via it's socket
+    // Server lauscht von jedem Client über seinen Socket
     socket.on("new_message", function (data) {
         //console.log("Client says", data);
 
-        //save message in database
+        //message speichern in Datenbank
         db.query("INSERT INTO chat (sender, message) VALUES ('" + data.username + "', '" + data.message + "')", function (error, result) {
-            // server will send message to all connected clients
+            // server sendet nachricht an alle User
             io.emit("new_message", {
                 id: result.insertId,
                 message: data
@@ -79,7 +79,7 @@ io.on("new_message", function (data) {
 });
 
 
-// add headers
+
 app.use(function (request, result, next) {
     result.setHeader("Access-Control-Allow-Origin", "*");
     next();
@@ -126,7 +126,7 @@ app.get("/get_mining", function (request, result) {
 
 
 
-// create API for get_message
+// API für get_message
 app.get("/get_messages", function (request, result) {
     db.query("SELECT * FROM chat", function (error, messages) {
         // return data will be in JSON format
@@ -146,7 +146,7 @@ app.delete("/deleteMessages", function (req, res) {
         res.send("Alle Nachrichten gelöscht: " + result);
     })
 })
-
+//Test user anlegen
 app.post("/addTestUser", function (req, res) {
     db.query('INSERT INTO user SET ? ', { name: "Test", email: "test@test.de", passwort: "test", crypto: "testwallet", kontostand: 100, mining : 0}, function (err, result) {
         if (err) {

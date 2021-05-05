@@ -1,17 +1,17 @@
-const mysql = require("mysql");
-const show = require("./auth");
-const { PrismaClient } = require("@prisma/client");
+const mysql = require("mysql"); //mysql import
+const show = require("./auth"); // email des angemeldeten User importieren 
+const { PrismaClient } = require("@prisma/client"); //Prisma Orm import
 const prisma = new PrismaClient();
 
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({       //Datenbank verbindung aufbauen
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE
 });
 
-exports.accDelete = (req, res) => {
+exports.accDelete = (req, res) => { //Account löschen 
 
     async function deleteAcc() {
         var email = show.email;
@@ -34,7 +34,7 @@ exports.accDelete = (req, res) => {
 }
 
 
-exports.nameChange = (req, res) => {
+exports.nameChange = (req, res) => { //Name von User ändern 
    
   async function updateName() {
       const { changeName } = req.body;
