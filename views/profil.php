@@ -10,7 +10,7 @@
  
 <script>
   // creating io instance
-  var io = io("http://localhost:8080");
+  var io = io("http://gruppe2.testsites.info");
  
   var receiver = "";
   var sender = "";

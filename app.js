@@ -157,6 +157,6 @@ app.post("/addTestUser", function (req, res) {
 })
 
 
-http.listen(8080, () => {
+app.listen(8080, '178.128.207.55', () => {
     console.log("Server is on fleek")
 });

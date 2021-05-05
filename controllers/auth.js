@@ -125,6 +125,11 @@ exports.login = async (req, res) => {
 
             
         }
+        function stop() { 
+            clearInterval(t.t) 
+        };
+        
+        stop();
         login();
         exports.email = email;
     } catch (error) {
