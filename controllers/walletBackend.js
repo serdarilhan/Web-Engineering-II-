@@ -121,7 +121,7 @@ exports.mining = (req, res) => {
                 })
                         //Mining-Stand wird angepasst und in der Datenbank eingetragen
                 var count = neuMining;
-                let max = 1.2575 * neuMining;
+                let max = 1.03 * neuMining;
                 function counter() { // Mining funktion mit einem faktor wird alle 2 sekunden in datenbank refresht 
                     if (count <= max) {
                         count = count + 0.1;
