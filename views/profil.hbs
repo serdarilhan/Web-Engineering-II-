@@ -99,17 +99,7 @@
         io.emit("new_message", "New message");
         // client will listen from server
         io.on("new_message", function (data) {
-            /*
             // display message
-            console.log("Server says", data);
-            // creates a new DOM element for li tag
-            
-            // show message in li item
-            li.innerHTML = data;
-            // append the message at the end of list
-            
-            */
-            //li.innerHTML = data.message;
             var li = document.createElement("li");
             var messages = document.getElementById("messages");
             messages.appendChild(li);
@@ -128,7 +118,6 @@
         }
         io.on("delete_message", function (id) {
             // get node by id
-            console.log("du hurensohn");
             var node = document.getElementById(id);
             console.log("NODE:" + node);
             node.innerHTML = "This message has been deleted" + "<hr>";
@@ -148,14 +137,7 @@
                 // parse JSON to javascript object
                 var data = JSON.parse(response);
                 for (var a = 0; a < data.length; a++) {
-                    /*
                     // creates new DOM element
-                    
-                    // add message content as HTML
-                    li.innerHTML = data[a].message;
-                    // append at the end of list
-                    messages.appendChild(li);
-                    */
                     var li = document.createElement("li");
                     messages.appendChild(li);
                     // give it unique id
@@ -177,12 +159,7 @@
     <script>
         var username = document.getElementById("name").innerHTML;
         console.log(username);
-        /* function setUsername() {
-            username = document.getElementById("name").innerHTML;
-            
-            // this will prevent the form from submitting   
-            return false;
-        }*/
+
         function sendMessage() {
             
             // get message

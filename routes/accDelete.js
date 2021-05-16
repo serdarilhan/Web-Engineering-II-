@@ -7,5 +7,3 @@ router.post("/accDelete", deleteController.accDelete);
 router.post("/changeName", deleteController.nameChange);
 
 module.exports = router;
-
-//Route für account löschen

@@ -6,7 +6,7 @@ body {
 }
 
 body {
-  background: url('bg.jpg') no-repeat center center fixed;
+  background-color: #636363;
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
@@ -24,10 +24,6 @@ h1 {
     font-family: 'DotGothic16', sans-serif;
 }
 
-/* .wrapper {
-    background-image: url("bg.jpg");
-    background-repeat: no-repeat;
-} */
 
 .form-signin {
   width: 100%;

@@ -86,12 +86,6 @@ exports.login = async (req, res) => {
 
         var { email, passwort } = req.body;
 
-        // if (!email || !passwort) {
-        //     return res.status(401).render('login', {
-        //         message: "Schauen Sie noch einmal!"
-        //     })
-        // }
-
         async function login() { //Login
             const emailvorhanden = await prisma.$queryRaw('SELECT email FROM user WHERE email = ?', email);
             if (emailvorhanden.length >= 1) {

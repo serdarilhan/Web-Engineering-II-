@@ -4,8 +4,9 @@ const mysql = require("mysql");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const app = express();
-var http = require("http").createServer(app);
-var io = require("socket.io")(http);
+var http = require("http");
+var server = http.createServer(app);
+var io = require("socket.io")(server);
 dotenv.config({ path: './.env' });
 var bodyParser = require("body-parser");
 const show = require("./controllers/auth");
@@ -157,6 +158,6 @@ app.post("/addTestUser", function (req, res) {
 })
 
 
-http.listen(8080, () => {
+server.listen(8080, () => {
     console.log("Server is on fleek")
 });
