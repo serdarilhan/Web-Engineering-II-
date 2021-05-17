@@ -17,23 +17,25 @@ router.get("/login", (req, res) => { //Login anzeigen
     res.render("login");
 });
 router.get("/home", (req, res) => {//Home anzeigen 
-    db.query("SELECT name,crypto,email FROM user", function (err, result) {
-        if (err) {
+    db.query("SELECT name,crypto,email FROM user",function(err,result){
+        if(err){
             console.log(err);
         }
-        let array = [];
+        var liste = JSON.stringify(result);
+        var namen = JSON.stringify(result);
+       let array = [];
         let name = [];
-        for (i in result) {
-            array.push(result[i].name + " " + result[i].crypto + " " + result[i].email);
+        for(i in result){
+            array.push(result[i].name + " " +  result[i].crypto + " " + result[i].email);
             name.push(result[i].name);
-        }
-
-        res.render("home", { //Alle registrierten User mit name und Crypto-Adresse anzeigen
-            liste: array, namen: name
+       }
+        
+        res.render("home",{ //Alle registrierten User mit name und Crypto-Adresse anzeigen
+            liste:array, namen: name
         });
-
+      
     })
-
+   
 });
 router.get("/profil", (req, res) => { //Im Chat der Sender namen anzeigen
     db.query("SELECT name FROM user WHERE email = ?", [show.email], function (err, result) {
@@ -43,7 +45,7 @@ router.get("/profil", (req, res) => { //Im Chat der Sender namen anzeigen
         var name = result[0].name;
         res.render("profil", {
             sender: name
-        });
+        }); 
     });
 });
 router.get("/wallet", (req, res) => { // Zahlungshistorie anzeigen 
@@ -72,20 +74,22 @@ router.get("/wallet", (req, res) => { // Zahlungshistorie anzeigen
                     for (var i in results) {
 
                         ergebnis.push(results[i].amount + " " + results[i].date + " " + results[i].info + " ");
-
+                    
                     }
-
+                   
 
                     db.query("SELECT crypto FROM user WHERE email = ? ", [show.email], function (err, result) {
                         if (err) {
                             console.log(err);
                         }
+                        console.log(result);
                         var crypto = result[0].crypto;
 
                         db.query("SELECT name FROM user WHERE email = ? ", [show.email], function (err, result) {
                             if (err) {
                                 console.log(err);
                             }
+                            console.log(result);
                             var name = result[0].name;
 
                             function response() {
@@ -96,7 +100,13 @@ router.get("/wallet", (req, res) => { // Zahlungshistorie anzeigen
                             response();
                         })
 
+                        
+      
+
                     })
+
+                    
+
 
                 })
 
