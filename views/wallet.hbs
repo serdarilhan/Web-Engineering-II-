@@ -192,14 +192,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div style="width: 50px">
-                            <p>{{crypto}} <br> {{kontostand}}</p>
-                        </div>
 
                         <div class="form-group">
                             <form class="form-signin" action="/accDelete/changeName" method="POST">
                                 <input type="text" class="form-control" name="changeName">
-                                <button class="btn btn-dark mb-3" type="submit">Namen ändern</button>
+                                <br><button class="btn btn-dark mb-3" type="submit">Namen ändern</button>
                             </form>
 
                             <form class="form-signin" action="/auth/logout" method="POST">
@@ -263,7 +260,7 @@
 
 
     <script>
-        var server = "http://gruppe2.testsites.info";
+        var server = "https://gruppe2.testsites.info";
         setInterval(function () {
             $.ajax({
                 url: server + "/get_mining",

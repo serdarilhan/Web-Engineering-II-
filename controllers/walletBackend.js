@@ -121,9 +121,8 @@ exports.mining = (req, res) => {
                 })
                         //Mining-Stand wird angepasst und in der Datenbank eingetragen
                 var count = neuMining;
-                let max = 1.03 * neuMining;
+                //let max = 1.03 * neuMining;
                 function counter() { // Mining funktion mit einem faktor wird alle 2 sekunden in datenbank refresht 
-                    if (count <= max) {
                         count = count + 0.1;
                         //res.render("wallet",{
                         //  minen: "Ihre Mining-Funktion: " //Ausbauen ohne error in wallet anzeigen, minen2 : count
@@ -131,7 +130,6 @@ exports.mining = (req, res) => {
                         console.log(count);
                         db.query("UPDATE user SET ? WHERE email = ?", [{ mining: count }, email]);
                         return count;
-                    }
 
                 }
                 var t = setInterval(counter, 2000);

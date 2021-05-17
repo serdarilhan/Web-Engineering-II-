@@ -17,18 +17,21 @@ router.get("/login", (req, res) => { //Login anzeigen
     res.render("login");
 });
 router.get("/home", (req, res) => {//Home anzeigen 
-    db.query("SELECT name,crypto FROM user",function(err,result){
+    db.query("SELECT name,crypto,email FROM user",function(err,result){
         if(err){
             console.log(err);
         }
         var liste = JSON.stringify(result);
-       let array = []
+        var namen = JSON.stringify(result);
+       let array = [];
+        let name = [];
         for(i in result){
-            array.push(result[i].name + " " + ":" + " " + result[i].crypto);
+            array.push(result[i].name + " " +  result[i].crypto + " " + result[i].email);
+            name.push(result[i].name);
        }
         
         res.render("home",{ //Alle registrierten User mit name und Crypto-Adresse anzeigen
-            liste:array
+            liste:array, namen: name
         });
       
     })
