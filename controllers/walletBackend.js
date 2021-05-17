@@ -16,31 +16,24 @@ exports.wallet = (req, res) => {
     var amount = parseFloat(amountString);
     var email = show.email;
 
-    console.log(amount);
 
-    db.query("SELECT crypto FROM user WHERE email = ? ", [email], function (err, result) { 
+    db.query("SELECT crypto FROM user WHERE email = ? ", [email], function (err, result) {
         if (err) {
             console.log(err);
         }
-        console.log(result);
         var loggedInCrypto = result[0].crypto; //Abfrage ob die angegebene Crypto-Adresse nicht die eigene ist 
-        if (loggedInCrypto == adresse) { 
+        if (loggedInCrypto == adresse) {
             res.render("wallet", {
                 message1: "Fehler, es ist ihre Adresse!!!"
             });
-            console.log("Fehler es ist ihre Adresse!!!");
-        }   
-        //console.log(adresse);
+        }
 
 
         db.query("SELECT crypto FROM user WHERE crypto = ?", [adresse], function (err, result) {
-            console.log(result[0]);
             if (err) {
                 console.log(err);
             }
             if (result[0] == undefined) {   // Abfrage ob die Crypto-Adresse existiert 
-                console.log("Keine gültige Adresse");
-                //console.log("Hallo " + result[0]);
                 res.render("wallet", { message2: "Keine gültige Adresse" });
                 //res.redirect("../wallet");
             } else {
@@ -49,13 +42,11 @@ exports.wallet = (req, res) => {
                         console.log(err);
                     }
                     var max_send_money = result[0].kontostand;  // Nun wird abgefragt ob die anzahl der Coins vorhanden ist 
-                    console.log(max_send_money);
 
                     if (amount > max_send_money) {
                         res.render("wallet", {
                             message3: "Sie haben zu wenige Coins!!!"
                         })
-                        console.log("Sie haben zu wenige Coins!!!");
                     } else {
                         db.query("SELECT kontostand FROM user WHERE crypto = ?", [adresse], function (err, result) {
                             if (err) {
@@ -102,8 +93,6 @@ exports.mining = (req, res) => {
                 console.log(err);
             }
             var neuMining = amountMining + result[0].mining;
-            console.log(neuMining);
-            console.log(max_send_money);
             var neuerKontostandUser = max_send_money - amountMining;
 
 
@@ -111,7 +100,6 @@ exports.mining = (req, res) => {
                 res.render("wallet", {
                     message5: "Sie haben zu wenige Coins!!!"
                 })
-                console.log("Sie haben zu wenige Coins!!!");
             } else {
                 db.query('UPDATE user SET ? WHERE email = ?', [{ mining: neuMining }, email]);
                 db.query('UPDATE user SET ? WHERE email = ?', [{ kontostand: neuerKontostandUser }, email]);
@@ -119,17 +107,12 @@ exports.mining = (req, res) => {
                 res.render("wallet", {
                     message6: "Mining erfolgreich durchgeführt!!!"
                 })
-                        //Mining-Stand wird angepasst und in der Datenbank eingetragen
+                //Mining-Stand wird angepasst und in der Datenbank eingetragen
                 var count = neuMining;
-                //let max = 1.03 * neuMining;
                 function counter() { // Mining funktion mit einem faktor wird alle 2 sekunden in datenbank refresht 
-                        count = count + 0.1;
-                        //res.render("wallet",{
-                        //  minen: "Ihre Mining-Funktion: " //Ausbauen ohne error in wallet anzeigen, minen2 : count
-                        //});
-                        console.log(count);
-                        db.query("UPDATE user SET ? WHERE email = ?", [{ mining: count }, email]);
-                        return count;
+                    count = count + 0.1;
+                    db.query("UPDATE user SET ? WHERE email = ?", [{ mining: count }, email]);
+                    return count;
 
                 }
                 var t = setInterval(counter, 2000);
@@ -143,12 +126,12 @@ exports.mining = (req, res) => {
                     var mining_crypto = result[0].crypto;
                     var datum = new Date();
                     db.query('INSERT INTO transaction SET ?', { sender: mining_crypto, receiver: mining_crypto, amount: amountMining, date: datum, info: "Mining" });
-                }); 
+                });
 
-                
+
 
                 res.redirect("back");
-                
+
 
             }
         })
@@ -161,12 +144,11 @@ exports.auszahlen = (req, res) => {
     var amountAuszahlen = req.body.auszahlen;
     var amountMining = parseFloat(amountAuszahlen);
     var email = show.email;
-    // console.log("T: " + t.t);
-    
-    function stop() { 
+
+    function stop() {
         clearInterval(t.t)  // Beim auzahlen wird die mining funktion gestoppt 
     };
-    
+
     stop();
 
     db.query("SELECT mining FROM user WHERE email = ?", [email], function (err, result) {
@@ -182,9 +164,7 @@ exports.auszahlen = (req, res) => {
                     console.log(err);
                 }
                 var kontostand = result[0].kontostand;
-                console.log(kontostand); 
                 var neuerKontostand = kontostand + amountMining;
-                console.log(neuerKontostand);
                 db.query("UPDATE user SET ? WHERE email = ?", [{ mining: neuesMining }, email]);
                 db.query("UPDATE user SET ? WHERE email = ?", [{ Kontostand: neuerKontostand }, email]);
 
@@ -199,7 +179,7 @@ exports.auszahlen = (req, res) => {
                     var auszahlen_crypto = result[0].crypto;
                     var datum = new Date();
                     db.query('INSERT INTO transaction SET ?', { sender: auszahlen_crypto, receiver: auszahlen_crypto, amount: amountMining, date: datum, info: "Auszahlen" });
-                    
+
                 }); //Werte werden in der Datenbank angepasst
             })
             res.status(200).redirect("../wallet");
@@ -208,11 +188,10 @@ exports.auszahlen = (req, res) => {
             res.render("wallet", {
                 message8: "Sie haben nicht so viel gemint!!"
             })
-            console.log("Sie haben nicht so viel gemint!!");
         }
 
 
     })
-    
+
 }
 

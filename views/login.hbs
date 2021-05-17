@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
 </head>
 
 <body class="text-center">
-  
+
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -27,7 +27,7 @@
     <div class="card" style="width: 25rem;">
 
         <form class="form-signin" action="/auth/login" method="POST">
-           
+
             <h1 class="h3 mb-4"><b>Login</b></h1>
             <input type="email" id="email" class="form-control" placeholder="Email" name="email" required>
             <input type="password" id="passwort" class="form-control" placeholder="Passwort" name="passwort" required>
@@ -35,13 +35,13 @@
             <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Login</button>
 
             <a href="/">Zur Registrierung</a>
-          
+
         </form>
 
     </div>
 
     {{#if message}}
-        <script>alert("{{message}}")</script>
+    <script>alert("{{message}}")</script>
     {{/if}}
 
 </body>

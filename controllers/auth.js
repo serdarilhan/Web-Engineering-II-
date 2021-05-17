@@ -19,28 +19,7 @@ const db = mysql.createConnection({ //Datenbank verbindung mit mysql
 
 
 exports.index = (req, res) => {
-    
-    //ALTER CODE OHNE ORM FÜR DIE DATENBANK
 
-
-    /*    const emailVergeben = user.findAll({where: {email: email}}).then((req)=>{}).catch((err) => {if (err) {console.log(err);}});
-     */ //  const emailVergeben =  db.sequelize.query("SELECT email FROM user");
-    //console.log(emailVergeben);
-
-    /*     if (emailVergeben > 0) {
-            return res.render("index", {
-                message: " Email schon vergeben"
-            })
-        } else if (passwort !== passwortWiederholen) {
-            return res.render("index", {
-                message: "Passwort stimmt nicht überein!"
-            })
-        } else { */
-    /* db.sequelize.sync().then((req)=>{  */
-
-
-    //   });
-    //}
     const { name, email, passwort, passwortWiederholen } = req.body;
 
     async function register() { //Regestrieren 
@@ -110,7 +89,6 @@ exports.login = async (req, res) => {
                     }
                     res.cookie("jwt", token, cookieoptions);
                     res.status(200).redirect("../home");
-                    //res.send("jwt: " + token);
                 }
                 return email;
             } else {
@@ -118,12 +96,12 @@ exports.login = async (req, res) => {
                 res.redirect("/login");
             }
 
-            
+
         }
-        function stop() { 
-            clearInterval(t.t) 
+        function stop() {
+            clearInterval(t.t)
         };
-        
+
         stop();
         login();
         exports.email = email;
@@ -134,10 +112,10 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => { //Logout der Web-token wird gelöscht
 
-    function stop() { 
-        clearInterval(t.t) 
+    function stop() {
+        clearInterval(t.t)
     };
-    
+
     stop();
     res.clearCookie('jwt');
     res.status(200).redirect("../login");

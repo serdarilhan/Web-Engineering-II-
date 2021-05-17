@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <link rel="stylesheet" href="/search.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -46,101 +46,86 @@
     </nav>
 
     <h1 id="hallo"></h1>
-    {{!-- <form class="form-signin" action="/auth/logout" method="POST">
 
-        <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Logout</button>
+    <div class="container">
+        <div class="text-center">
+            <h1>Willkommen</h1>
+            <p>Suche hier User, um ihnen Geld zu schicken.</p>
+            <input type="text" id="input" onkeyup="myFunction()" placeholder="Suche nach Personen..">
 
-    </form> --}}
-{{!-- <form>
-<input type="search" id="suche" placeholder="Suche Personen...">
- <a href="javascript: search();">Seite durchsuchen</a>
-</form> --}}
-<div class="container">
-<div class="text-center">
-<h1>Willkommen</h1>
-<p>Suche hier User, um ihnen Geld zu schicken.</p>
-<input type="text" id="input" onkeyup="myFunction()" placeholder="Suche nach Personen..">
+            <script>
+                function myFunction() { //String wird zeichen für zeichen durchgegangen bei keinem Treffer werden die Datensätze nicht angezeigt. Suche nach Personen
 
-<script>
-function myFunction() { //String wird zeichen für zeichen durchgegangen bei keinem Treffer werden die Datensätze nicht angezeigt. Suche nach Personen
+                    var input, filter, ul, li, a, i, txtValue;
+                    input = document.getElementById('input');
+                    filter = input.value.toUpperCase();
+                    ul = document.getElementById("liste");
+                    li = ul.getElementsByTagName('li');
 
-  var input, filter, ul, li, a, i, txtValue;
-  input = document.getElementById('input');
-  filter = input.value.toUpperCase();
-  ul = document.getElementById("liste");
-  li = ul.getElementsByTagName('li');
+                    for (i = 0; i < li.length; i++) {
+                        a = li[i].getElementsByTagName("p")[0];
+                        txtValue = a.textContent || a.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            li[i].style.display = "";
+                        } else {
+                            li[i].style.display = "none";
+                        }
+                    }
+                }
 
-  for (i = 0; i < li.length; i++) {
-    a = li[i].getElementsByTagName("p")[0];
-    txtValue = a.textContent || a.innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
-    } else {
-      li[i].style.display = "none";
-    }
-  }
-}
+            </script>
 
-</script>
+            <ul id="liste">
+            </ul>
+            {{#each liste}}
+            <script>
+                var string = "{{this}}";
+                string = string.split(" ");
+                console.log(string);
 
-<ul id="liste">
-        </ul>
-        {{#each liste}}
-	<script>
-		var string = "{{this}}";
-    string = string.split(" ");
-console.log(string);
-/* var name = [];
-for(var i =0; i < string.length; i++){
-    name.push(string[i]);
-    if(i != string.length-1){
-        name.push(" ");
-    }
-}	
-console.log(name);*/	
-		var p = document.createElement("p");
-		var input = document.createElement("INPUT");
-		input.setAttribute("type", "text");
-		input.setAttribute("id", string[0]);
-		input.setAttribute("value", string[1]);
-		var copybutton = document.createElement("button");
-		copybutton.setAttribute("class", "btn btn-outline-primary");
-		copybutton.setAttribute("onclick",string[0]+"()");
-		copybutton.innerHTML = "Kopieren";
-		var li = document.createElement("li");
-		p.innerHTML = string[2];
-		p.style.fontWeight = "bold";
-		li.appendChild(p);
-		li.appendChild(input);
-		li.appendChild(copybutton);
-		document.getElementById("liste").appendChild(li);	
-	</script>
-     
-      
-	{{/each}}
+                var p = document.createElement("p");
+                var input = document.createElement("INPUT");
+                input.setAttribute("type", "text");
+                input.setAttribute("id", string[0]);
+                input.setAttribute("value", string[1]);
+                var copybutton = document.createElement("button");
+                copybutton.setAttribute("class", "btn btn-outline-primary");
+                copybutton.setAttribute("onclick", string[0] + "()");
+                copybutton.innerHTML = "Kopieren";
+                var li = document.createElement("li");
+                p.innerHTML = string[2];
+                p.style.fontWeight = "bold";
+                li.appendChild(p);
+                li.appendChild(input);
+                li.appendChild(copybutton);
+                document.getElementById("liste").appendChild(li);
+            </script>
 
-{{#each namen}}
 
-<script>
-function {{this}}() {
-  /* Get the text field */
-  var copyText = document.getElementById("{{this}}");
+            {{/each}}
 
-  /* Select the text field */
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            {{#each namen}}
 
-  /* Copy the text inside the text field */
-  document.execCommand("copy");
+            <script>
+                function { { this } } () {
+                    /* Get the text field */
+                    var copyText = document.getElementById("{{this}}");
 
-  /* Alert the copied text */
-  alert("Copied the text: " + copyText.value);
-}
-</script>
-{{/each}}
-</div>
-</div>
-   
+                    /* Select the text field */
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+                    /* Copy the text inside the text field */
+                    document.execCommand("copy");
+
+                    /* Alert the copied text */
+                    alert("Copied the text: " + copyText.value);
+                }
+            </script>
+            {{/each}}
+        </div>
+    </div>
+
 </body>
 
 </html>

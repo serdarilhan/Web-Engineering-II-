@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
   <meta charset="UTF-8">
@@ -21,12 +21,12 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
- 
+
 
   <div class="card" style="width: 25rem;">
 
     <form class="form-signin" action="/auth/index" method="POST">
-     
+
       <h1 class="h3 mb-4"><b>Registrierung</b></h1>
       <input type="text" id="name" class="form-control" placeholder="Name" name="name" required autofocus>
       <input type="email" id="email" class="form-control" placeholder="Email" name="email" required>
@@ -37,13 +37,13 @@
       <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Los!</button>
 
       <a href="/login">Zum Login</a>
-    
+
     </form>
 
   </div>
 
   {{#if message}}
-    <script>alert("{{message}}")</script>
+  <script>alert("{{message}}")</script>
   {{/if}}
 
 </body>

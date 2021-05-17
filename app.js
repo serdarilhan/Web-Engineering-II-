@@ -33,14 +33,14 @@ io.on("connection", function (socket) {
 
     // Server lauscht von jedem Client über seinen Socket 
     socket.on("new_message", function (data) {
-        
+
         // message speichern in Datenbank
         if (data.username != undefined || data.message != undefined) {
             db.query("INSERT INTO chat (sender, message) VALUES('" + data.username + "', '" + data.message + "')", function (error, result) {
                 data.id = result.insertId;
                 io.emit("new_message", data);
-            }); 
-            
+            });
+
         }
 
     });
@@ -53,7 +53,7 @@ io.on("connection", function (socket) {
             // event an jeden user
             io.emit("delete_message", messageId);
         });
-        
+
     });
 
 });
@@ -61,11 +61,9 @@ io.on("connection", function (socket) {
 
 // Client wird vom Server abgehört
 io.on("new_message", function (data) {
-    // console.log("Server says", data);
 
     // Server lauscht von jedem Client über seinen Socket
     socket.on("new_message", function (data) {
-        //console.log("Client says", data);
 
         //message speichern in Datenbank
         db.query("INSERT INTO chat (sender, message) VALUES ('" + data.username + "', '" + data.message + "')", function (error, result) {
@@ -75,7 +73,7 @@ io.on("new_message", function (data) {
                 message: data
             });
         });
-        
+
     });
 });
 
@@ -120,7 +118,6 @@ app.get("/get_mining", function (request, result) {
     db.query("SELECT * FROM user WHERE email = ?", [show.email], function (error, mining) {
         // return data will be in JSON format
         result.end(JSON.stringify(mining));
-        console.log(mining[5]);
     });
 
 });
@@ -132,7 +129,6 @@ app.get("/get_messages", function (request, result) {
     db.query("SELECT * FROM chat", function (error, messages) {
         // return data will be in JSON format
         result.end(JSON.stringify(messages));
-        console.log(messages[1]);
     });
 
 });
@@ -149,7 +145,7 @@ app.delete("/deleteMessages", function (req, res) {
 })
 //Test user anlegen
 app.post("/addTestUser", function (req, res) {
-    db.query('INSERT INTO user SET ? ', { name: "Test", email: "test@test.de", passwort: "test", crypto: "testwallet", kontostand: 100, mining : 0}, function (err, result) {
+    db.query('INSERT INTO user SET ? ', { name: "Test", email: "test@test.de", passwort: "test", crypto: "testwallet", kontostand: 100, mining: 0 }, function (err, result) {
         if (err) {
             console.log(err);
         }
